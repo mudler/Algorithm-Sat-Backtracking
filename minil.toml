@@ -1,5 +1,5 @@
 name = "Algorithm-SAT-Backtracking"
-# badges = ["travis"]
+badges = ["travis"]
 authority="cpan:MUDLER"
 
 module_maker="ModuleBuildTiny"

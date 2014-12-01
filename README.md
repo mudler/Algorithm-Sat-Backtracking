@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/mudler/Algorithm-Sat-Backtracking.png?branch=master)](https://travis-ci.org/mudler/Algorithm-Sat-Backtracking)
 # NAME
 
 Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure Perl

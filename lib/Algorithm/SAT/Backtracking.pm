@@ -148,15 +148,79 @@ __END__
 
 =head1 NAME
 
-Algorithm::SAT::Backtracking - It's new $module
+Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure Perl
 
 =head1 SYNOPSIS
 
     use Algorithm::SAT::Backtracking;
+    my $solver = Algorithm::SAT::Backtracking->new;
+    my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
+    my $clauses = [
+        [ 'blue',  'green',  '-yellow' ],
+        [ '-blue', '-green', 'yellow' ],
+        [ 'pink', 'purple', 'green', 'blue', '-yellow' ]
+    ];
+
+    my $model = $solver->solve( $variables, $clauses );
+
+    $model = {
+          'green' => 1,
+          'yellow' => 1,
+          'blue' => 1
+    }
 
 =head1 DESCRIPTION
 
-Algorithm::SAT::Backtracking is ...
+Algorithm::SAT::Backtracking is a pure Perl implementation of a simple SAT Backtracking solver.
+
+In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as I<SATISFIABILITY> or I<SAT>) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values B<TRUE> or B<FALSE> in such a way that the formula evaluates to B<TRUE>.
+
+If this is the case, the formula is called satisfiable. On the other hand, if no such assignment exists, the function expressed by the formula is identically B<FALSE> for all possible variable assignments and the formula is unsatisfiable.
+
+For example, the formula "a AND NOT b" is satisfiable because one can find the values a = B<TRUE> and b = B<FALSE>, which make (a AND NOT b) = TRUE. In contrast, "a AND NOT a" is unsatisfiable. More: L<https://en.wikipedia.org/wiki/Boolean_satisfiability_problem> .
+
+=head1 METHODS
+
+=head2 solve()
+
+The input consists of a boolean expression in Conjunctive Normal Form.
+This means it looks something like this:
+
+ `(blue OR green) AND (green OR NOT yellow)`
+
+ We encode this as an array of strings with a `-` in front for negation:
+
+    `[['blue', 'green'], ['green', '-yellow']]`
+
+Hence, each row means an B<AND>, while a list groups two or more B<OR> clauses.
+
+Will follow a package to help to define proper expressions soon.
+
+=head2 resolve()
+
+Uses the model to resolve some variable to its actual value, or undefined if not present.
+
+    my $model = { blue => 1, red => 0 };
+    my $a=$solver->resolve( "blue", $model );
+    #$a = 1
+
+=head2 satisfiable()
+
+Determines whether a clause is satisfiable given a certain model.
+
+    my $model
+        = { pink => 1, purple => 0, green => 0, yellow => 1, red => 0 };
+    my $a=$solver->satisfiable( [ 'purple', '-pink' ], $model );
+    #$a = 0
+
+=head2 update()
+
+Copies the model, then sets `choice` = `value` in the model, and returns it.
+
+    my $model
+        = { pink => 1, red => 0, purple => 0, green => 0, yellow => 1 };
+    my $new_model = $solver->update( $model, 'foobar', 1 );
+    # now $new_model->{foobar} is 1
 
 =head1 LICENSE
 

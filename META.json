@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "A simple Backtracking SAT solver written in pure Perl",
    "author" : [
       "mudler <mudler@dark-lab.net>"
    ],
@@ -52,6 +52,17 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/mudler/Algorithm-Sat-Backtracking/issues"
+      },
+      "homepage" : "https://github.com/mudler/Algorithm-Sat-Backtracking",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/mudler/Algorithm-Sat-Backtracking.git",
+         "web" : "https://github.com/mudler/Algorithm-Sat-Backtracking"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:MUDLER"
 }

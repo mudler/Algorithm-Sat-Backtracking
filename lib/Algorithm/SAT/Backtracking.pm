@@ -4,12 +4,6 @@ use strict;
 use warnings;
 use Storable qw(dclone);
 
-our $VERSION = "0.01";
-
-sub new {
-    return bless {}, shift;
-}
-
 # This is an extremely simple implementation of the 'backtracking' algorithm for
 # solving boolean satisfiability problems. It contains no optimizations.
 
@@ -21,6 +15,13 @@ sub new {
 # We encode this as an array of strings with a `-` in front for negation:
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
+
+our $VERSION = "0.01";
+
+sub new {
+    return bless {}, shift;
+}
+
 sub solve {
 
     # ### solve
@@ -179,6 +180,8 @@ If this is the case, the formula is called satisfiable. On the other hand, if no
 
 For example, the formula "a AND NOT b" is satisfiable because one can find the values a = B<TRUE> and b = B<FALSE>, which make (a AND NOT b) = TRUE. In contrast, "a AND NOT a" is unsatisfiable. More: L<https://en.wikipedia.org/wiki/Boolean_satisfiability_problem> .
 
+Look also at the test file for an example of usage.
+
 =head1 METHODS
 
 =head2 solve()
@@ -193,6 +196,8 @@ This means it looks something like this:
     `[['blue', 'green'], ['green', '-yellow']]`
 
 Hence, each row means an B<AND>, while a list groups two or more B<OR> clauses.
+
+Returns 0 if the expression can't be solved with the given clauses, the model otherwise.
 
 Will follow a package to help to define proper expressions soon.
 

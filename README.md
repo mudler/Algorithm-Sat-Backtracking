@@ -32,6 +32,8 @@ If this is the case, the formula is called satisfiable. On the other hand, if no
 
 For example, the formula "a AND NOT b" is satisfiable because one can find the values a = **TRUE** and b = **FALSE**, which make (a AND NOT b) = TRUE. In contrast, "a AND NOT a" is unsatisfiable. More: [https://en.wikipedia.org/wiki/Boolean\_satisfiability\_problem](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) .
 
+Look also at the test file for an example of usage.
+
 # METHODS
 
 ## solve()
@@ -46,6 +48,8 @@ This means it looks something like this:
        `[['blue', 'green'], ['green', '-yellow']]`
 
 Hence, each row means an **AND**, while a list groups two or more **OR** clauses.
+
+Returns 0 if the expression can't be solved with the given clauses, the model otherwise.
 
 Will follow a package to help to define proper expressions soon.
 

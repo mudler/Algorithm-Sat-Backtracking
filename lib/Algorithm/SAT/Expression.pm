@@ -17,7 +17,7 @@ sub new {
 sub or {
     my $self = shift;
     $self->_ensure(@_);
-    push( @{$self->{_expr}}, [@_] );
+    push( @{ $self->{_expr} }, [@_] );
     return $self;
 }
 
@@ -29,14 +29,14 @@ sub xor {
     # This first clause is the 'or' portion. "One of them must be true."
     my $self     = shift;
     my @literals = @_;
-    push( @{$self->{_expr}}, [@literals] );
+    push( @{ $self->{_expr} }, [@literals] );
 
-    # Then, we generate clauses such that "only one of thefm is true".
+    # Then, we generate clauses such that "only one of them is true".
     for ( my $i = 0; $i <= $#literals; $i++ ) {
         for ( my $j = $i + 1; $j <= $#literals; $j++ ) {
             $self->_ensure(@literals);
             push(
-               @{$self->{_expr}},
+                @{ $self->{_expr} },
                 [   $self->negate_literal( $literals[$i] ),
                     $self->negate_literal( $literals[$j] )
                 ]
@@ -52,7 +52,7 @@ sub xor {
 sub and {
     my $self = shift;
     $self->_ensure(@_);
-    push( @{$self->{_expr}}, [$_] ) for @_;
+    push( @{ $self->{_expr} }, [$_] ) for @_;
     return $self;
 }
 
@@ -69,7 +69,8 @@ sub solve {
 # the expression.
 sub _ensure {
     my $self = shift;
-    $self->{_literals}->{$_} = 1 for @_;
+    $self->{_literals}->{$_} = 1
+        for map { substr( $_, 0, 1 ) eq "-" ? substr( $_, 1 ) : $_ } @_;
 }
 
 sub negate_literal {
@@ -80,7 +81,6 @@ sub negate_literal {
         ? substr( $var, 1 )
         : '-' . $var;
 }
-
 
 1;
 __END__

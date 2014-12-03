@@ -16,7 +16,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 sub new {
     return bless {}, shift;

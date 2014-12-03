@@ -3,7 +3,7 @@ use 5.008001;
 use strict;
 use warnings;
 use Algorithm::SAT::Backtracking;
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 # Boolean expression builder.  Note that the connector for clauses is `OR`;
 # so, when calling the instance methods `xor`, `and`, and `or`, the clauses

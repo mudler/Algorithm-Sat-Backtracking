@@ -16,7 +16,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 sub new {
     return bless {}, shift;
@@ -182,6 +182,8 @@ For example, the formula "a AND NOT b" is satisfiable because one can find the v
 
 Look also at the test file for an example of usage.
 
+L<Algorithm::SAT::Expression> use this module to solve Boolean expressions.
+
 =head1 METHODS
 
 =head2 solve()
@@ -199,7 +201,7 @@ Hence, each row means an B<AND>, while a list groups two or more B<OR> clauses.
 
 Returns 0 if the expression can't be solved with the given clauses, the model otherwise.
 
-Will follow a package to help to define proper expressions soon.
+Have a look at L<Algorithm::SAT::Expression> to see how to use it in a less painful way.
 
 =head2 resolve()
 

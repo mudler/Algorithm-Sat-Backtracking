@@ -2,6 +2,8 @@ Revision history for Perl extension Algorithm-SAT-Backtracking
 
 {{$NEXT}}
 
+    - Added Algorithm::SAT::Expression>
+
 0.01 2014-12-01T14:45:58Z
 
     - first release

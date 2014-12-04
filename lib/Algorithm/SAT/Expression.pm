@@ -2,14 +2,15 @@ package Algorithm::SAT::Expression;
 use 5.008001;
 use strict;
 use warnings;
-use Algorithm::SAT::Backtracking;
+require Algorithm::SAT::Backtracking;
+use Storable qw(dclone);
 our $VERSION = "0.03";
 
 # Boolean expression builder.  Note that the connector for clauses is `OR`;
 # so, when calling the instance methods `xor`, `and`, and `or`, the clauses
 # you're generating are `AND`ed with the existing clauses in the expression.
 sub new {
-    return bless { _literals => {} }, shift;
+    return bless { _literals => {}, _expr => [] }, shift;
 }
 
 # ### or
@@ -17,31 +18,30 @@ sub new {
 sub or {
     my $self = shift;
     $self->_ensure(@_);
+    my $or = dclone( \@_ );
     push( @{ $self->{_expr} }, [@_] );
     return $self;
 }
 
 # ### xor
-# Add clauses causing each of the provided arguments to be xored.
-
+# Add clauses causing each of the provided arguments to be xored.2
 sub xor {
 
     # This first clause is the 'or' portion. "One of them must be true."
     my $self     = shift;
     my @literals = @_;
-    push( @{ $self->{_expr} }, [@literals] );
+    push( @{ $self->{_expr} }, \@_ );
+    $self->_ensure(@literals);
 
     # Then, we generate clauses such that "only one of them is true".
     for ( my $i = 0; $i <= $#literals; $i++ ) {
         for ( my $j = $i + 1; $j <= $#literals; $j++ ) {
-            $self->_ensure(@literals);
             push(
                 @{ $self->{_expr} },
                 [   $self->negate_literal( $literals[$i] ),
                     $self->negate_literal( $literals[$j] )
                 ]
             );
-
         }
     }
     return $self;
@@ -59,8 +59,7 @@ sub and {
 # ### solve
 # Solve this expression with the backtrack solver. Lazy-loads the solver.
 sub solve {
-    Algorithm::SAT::Backtracking->new->solve(
-        [ keys %{ $_[0]->{_literals} } ],
+    return Algorithm::SAT::Backtracking->new->solve( $_[0]->{_variables},
         $_[0]->{_expr} );
 }
 
@@ -69,8 +68,12 @@ sub solve {
 # the expression.
 sub _ensure {
     my $self = shift;
-    $self->{_literals}->{$_} = 1
-        for map { substr( $_, 0, 1 ) eq "-" ? substr( $_, 1 ) : $_ } @_;
+    do {
+        $self->{_literals}->{$_} = 1;
+        push( @{ $self->{_variables} }, $_ );
+        }
+        for grep { !$self->{_literals}->{$_} }
+        map { substr( $_, 0, 1 ) eq "-" ? substr( $_, 1 ) : $_ } @_;
 }
 
 sub negate_literal {
@@ -99,7 +102,7 @@ Algorithm::SAT::Expression - A class that represent an expression for L<Algorith
     $exp->or( '-blue', '-green', 'yellow' );
     $exp->or( 'pink',  'purple', 'green', 'blue', '-yellow' );
     my $model = $exp->solve();
-    #$model => { 'yellow' => 1, 'green' => 1 };
+    # $model  now is { 'yellow' => 1, 'green' => 1 }
 
 =head1 DESCRIPTION
 

@@ -67,16 +67,42 @@ subtest "solve()" => sub {
         is( $agent->satisfiable( $c, $model ),
             1, "'@{$c}' is satisfiable against model" );
     }
+
+    $clauses = [
+        [ 'blue',  'green',  '-yellow' ],
+        [ '-blue', '-green', 'yellow' ],
+        [ 'pink', 'purple', 'green', 'blue', '-yellow' ]
+    ];
+
+    $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
+    $model = $agent->solve( $variables, $clauses );
+    is( ref $model, "HASH", "Backtrack returned a model" );
+    is_deeply(
+        $model,
+        { blue => 1, yellow => 1, green => 1 },
+        "Testing if the returned model satisfy the boolean expression"
+    );
+
+    my $clauses = [
+        [ '-foo@2.1', 'bar@2.2' ],
+        [ '-foo@2.3', 'bar@2.2' ],
+        [ '-baz@2.3', 'bar@2.3' ],
+        [ '-baz@1.2', 'bar@2.2' ],
+    ];
+    $variables = [ 'foo@2.1', 'bar@2.2', 'foo@2.3', 'baz@2.3', 'bar@2.3',
+        'baz@1.2' ];
+    $model = $agent->solve( $variables, $clauses );
+    is( ref $model, "HASH", "Backtrack returned a model" );
+    is_deeply(
+        $model,
+        {   'foo@2.3' => 1,
+            'foo@2.1' => 1,
+            'baz@2.3' => 1,
+            'bar@2.3' => 1,
+            'bar@2.2' => 1
+        },
+        "Testing if the returned model satisfy the boolean expression"
+    );
+
 };
-my $clauses = [
-    [ 'blue',  'green',  '-yellow' ],
-    [ '-blue', '-green', 'yellow' ],
-    [ 'pink', 'purple', 'green', 'blue', '-yellow' ]
-];
-
-my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
-my $model = $agent->solve( $variables, $clauses );
-is( ref $model, "HASH", "Backtrack returned a model" );
-is_deeply( $model, { blue => 1, yellow => 1, green => 1 }, "Testing solver" );
 done_testing;
-

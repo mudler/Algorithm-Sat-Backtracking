@@ -15,7 +15,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 sub new {
     return bless {}, shift;
@@ -31,7 +31,7 @@ sub solve {
     my $self      = shift;
     my $variables = shift;
     my $clauses   = shift;
-    my $model     = shift // {};
+    my $model     = defined $_[0] ? shift : {};
 
     # If every clause is satisfiable, return the model which worked.
 

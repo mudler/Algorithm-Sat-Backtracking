@@ -4,13 +4,30 @@ use strict;
 use warnings;
 require Algorithm::SAT::Backtracking;
 use Storable qw(dclone);
-our $VERSION = "0.04";
+use Carp qw(croak);
+our $VERSION = "0.05";
 
 # Boolean expression builder.  Note that the connector for clauses is `OR`;
 # so, when calling the instance methods `xor`, `and`, and `or`, the clauses
 # you're generating are `AND`ed with the existing clauses in the expression.
 sub new {
-    return bless { _literals => {}, _expr => [] }, shift;
+    return bless {
+        _literals       => {},
+        _expr           => [],
+        _implementation => "Algorithm::SAT::Backtracking"
+        },
+        shift;
+}
+
+sub with {
+    my $self = shift;
+    if ( eval "require $_[0];1;" ) {
+        $self->{_implementation} = shift;
+    }
+    else {
+        croak "The '$_[0]' could not be loaded";
+    }
+    return $self;
 }
 
 # ### or
@@ -59,8 +76,8 @@ sub and {
 # ### solve
 # Solve this expression with the backtrack solver. Lazy-loads the solver.
 sub solve {
-    return Algorithm::SAT::Backtracking->new->solve( $_[0]->{_variables},
-        $_[0]->{_expr} );
+    return $_[0]->{_implementation}
+        ->new->solve( $_[0]->{_variables}, $_[0]->{_expr} );
 }
 
 # ### _ensure
@@ -127,6 +144,13 @@ Takes the inputs and build an B<XOR> expression for it
 =head2 solve()
 
 Uses L<Algorithm::SAT::Backtracking> to return a model that satisfies the expression.
+
+=head2 with()
+
+Allow to change the SAT Algorithm used to solve the given expression
+
+     my $exp_simple_backtracking = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking");
+
 
 =head1 LICENSE
 

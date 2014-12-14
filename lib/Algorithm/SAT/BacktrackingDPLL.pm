@@ -113,18 +113,18 @@ sub _up {
     my $variables = shift;
     my $clauses   = shift;
     my $model     = defined $_[0] ? shift : {};
-    use Data::Dumper;
 
     #Finding single clauses that must be true, and updating the model
     ( @{$_} != 1 )
         ? ()
         : ( substr( $_->[0], 0, 1 ) eq "-" ) ? (
-        $self->_remove_literal( substr( $_->[0], 1 ), $clauses, $model )
-        )    #XXX: to add: remove the positive clause form OR's
+        $self->_remove_literal( substr( $_->[0], 1 ), $clauses, $model
+            ) #remove the positive clause form OR's and add it to the model with a false value
+        )
         : (     $self->_add_literal( "-" . $_->[0], $clauses )
             and $model->{ $_->[0] }
             = 1
-        ) # XXX: if the literal is present, remove it from SINGLE ARRAYS in $clauses and from http://www.dis.uniroma1.it/~liberato/ar/dpll/dpll.html DPLL # with UP
+        ) # if the literal is present, remove it from SINGLE ARRAYS in $clauses and add it to the model with a true value
         for ( @{$clauses} );
     return $model;
 }
@@ -139,6 +139,7 @@ sub _remove_literal {
         and exists $model->{$literal}
         and $model->{$literal} == 0;    #avoid cycle if already set
         #remove the literal from the model (set to false)
+    $model->{$literal} = 0;
     &_delete_from_index( $literal, $clauses );
 
     return 1;
@@ -158,6 +159,7 @@ sub _add_literal {
         and exists $model->{$literal}
         and $model->{$literal} == 1;    #avoid cycle if already set
         #remove the literal from the model (set to false)
+    $model->{$literal} = 1;
     &_delete_from_index( $literal, $clauses );
     return 1;
 }

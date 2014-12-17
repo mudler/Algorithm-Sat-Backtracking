@@ -41,13 +41,19 @@ sub solve {
 
     return 0 if !$self->_consistency_check( $clauses, $model );
 
-    # Choose a new value to test by simply looping over the possible variables
-    # and checking to see if the variable has been given a value yet.
+    #XXX: not working
+    $self->_pure($_)
+        ? ( $model->{$_} = 1 and $self->_remove_clause_if_contains( $_, $clauses ) )
+        : $self->_pure( "-" . $_ )
+        ? ( $model->{$_} = 0 and $self->_remove_clause_if_contains( $_, $clauses ) )
+        : ()
+        for @{$variables};
+    return $model if ( @{$clauses} == 0 );    #we were lucky
+                                              # XXX: end
+      # Choose a new value to test by simply looping over the possible variables
+      # and checking to see if the variable has been given a value yet.
 
-    my $choice;
-    foreach my $variable ( @{$variables} ) {
-        $choice = $variable and last if ( !exists $model->{$variable} );
-    }
+    my $choice = $self->_choice($variables,$model);
 
     # If there are no more variables to try, return false.
 
@@ -59,6 +65,16 @@ sub solve {
         $self->update( $model, $choice, 1 ) )    #true
         || $self->solve( $variables, $clauses,
         $self->update( $model, $choice, 0 ) );    #false
+}
+
+sub _choice{
+    my $self=shift;
+    my $variables=shift;
+    my $model=shift;
+    foreach my $variable ( @{$variables} ) {
+        $choice = $variable and last if ( !exists $model->{$variable} );
+    }
+    return $choice;
 }
 
 sub _consistency_check {
@@ -92,7 +108,6 @@ sub _pure {
         = substr( $literal, 0, 1 ) eq "-"
         ? substr( $literal, 1 )
         : "-" . $literal;
-
     return 1
         if (
         (   exists $self->{_impurity}->{$literal}
@@ -105,6 +120,7 @@ sub _pure {
         )
         );
 
+    #   print STDERR "$literal is IMpure\n" and
     return 0;
 }
 
@@ -140,7 +156,7 @@ sub _remove_literal {
         and $model->{$literal} == 0;    #avoid cycle if already set
         #remove the literal from the model (set to false)
     $model->{$literal} = 0;
-    &_delete_from_index( $literal, $clauses );
+    $self->_delete_from_index( $literal, $clauses );
 
     return 1;
 }
@@ -160,20 +176,37 @@ sub _add_literal {
         and $model->{$literal} == 1;    #avoid cycle if already set
         #remove the literal from the model (set to false)
     $model->{$literal} = 1;
-    &_delete_from_index( $literal, $clauses );
+    $self->_delete_from_index( $literal, $clauses );
     return 1;
 }
 
 sub _delete_from_index {
+    my $self   = shift;
     my $string = shift;
     my $list   = shift;
     foreach my $c ( @{$list} ) {
         next if @{$c} <= 1;
         for ( my $index = scalar( @{$c} ); $index >= 0; --$index ) {
-            splice( @{$c}, $index, 1 )
+            do {
+                splice( @{$c}, $index, 1 );
+                $self->{_impurity}->{$string}--;
+                }
                 if $c->[$index] eq $string;    # remove certain elements
         }
     }
+}
+
+sub _remove_clause_if_contains {
+    my $self=shift;
+    my $literal = shift;
+    my $list    = shift;
+    my $index;
+    while ( $index < scalar @{$list} ) {
+        splice( @{$list}, $index, 1 )
+            if grep { $_ eq $literal } @{ $list->[$index] };
+        $index++;
+    }
+
 }
 
 1;

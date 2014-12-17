@@ -2,10 +2,10 @@ use strict;
 use Test::More 0.98;
 use Algorithm::SAT::Backtracking;
 use_ok("Algorithm::SAT::Expression");
-use_ok("Algorithm::SAT::BacktrackingDPLL");
+use_ok("Algorithm::SAT::BacktrackingDPLLProb");
 subtest "and()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::BacktrackingDPLL");
+        "Algorithm::SAT::BacktrackingDPLLProb");
     $expr->and( "blue", "green" );
     $expr->and('pink');
     ok( defined $expr->{_literals}->{pink},
@@ -24,14 +24,14 @@ subtest "and()" => sub {
 
 subtest "or()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::BacktrackingDPLL");
+        "Algorithm::SAT::BacktrackingDPLLProb");
     $expr->or( "blue", "green" );
     $expr->or('pink');
     $expr->or( 'purple', '-yellow', 'green' );
     ok( !!grep { "@{$_}" eq "blue green" } @{ $expr->{_expr} } );
 
     $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::BacktrackingDPLL");
+        "Algorithm::SAT::BacktrackingDPLLProb");
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );
@@ -59,7 +59,7 @@ subtest "or()" => sub {
 
 subtest "xor()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::BacktrackingDPLL");
+        "Algorithm::SAT::BacktrackingDPLLProb");
     $expr->xor( "foo", "bar" );
     ok( !!grep { "@{$_}" eq "-foo -bar" } @{ $expr->{_expr} } );
     $expr->xor( "foo", "bar", "baz" );
@@ -70,7 +70,7 @@ subtest "xor()" => sub {
 
 subtest "solve()" => sub {
     my $exp = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::BacktrackingDPLL");
+        "Algorithm::SAT::BacktrackingDPLLProb");
     my $backtrack = Algorithm::SAT::Backtracking->new;
     $exp->or( 'blue',  'green',  '-yellow' );
     $exp->or( '-blue', '-green', 'yellow' );
@@ -83,7 +83,7 @@ subtest "solve()" => sub {
 };
 
 subtest "_pure()" => sub {
-    my $agent = Algorithm::SAT::BacktrackingDPLL->new;
+    my $agent = Algorithm::SAT::BacktrackingDPLLProb->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses = [
@@ -103,7 +103,7 @@ subtest "_pure()" => sub {
 
 #todo: testfiles for _remove_literal , _up and _pure
 subtest "_remove_literal()" => sub {
-    my $agent = Algorithm::SAT::BacktrackingDPLL->new;
+    my $agent = Algorithm::SAT::BacktrackingDPLLProb->new;
 
     my $clauses = [
         [ 'blue',  'green',  '-yellow' ],
@@ -126,7 +126,7 @@ subtest "_remove_literal()" => sub {
 };
 
 subtest "_up()" => sub {
-    my $agent     = Algorithm::SAT::BacktrackingDPLL->new;
+    my $agent     = Algorithm::SAT::BacktrackingDPLLProb->new;
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses   = [
         [ 'blue',  'green',  '-yellow' ],
@@ -149,7 +149,7 @@ subtest "_up()" => sub {
 };
 
 subtest "_pure()" => sub {
-    my $agent = Algorithm::SAT::BacktrackingDPLL->new;
+    my $agent = Algorithm::SAT::BacktrackingDPLLProb->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses = [
@@ -168,7 +168,7 @@ subtest "_pure()" => sub {
 };
 
 subtest "_remove_clause_if_contains()" => sub {
-    my $agent = Algorithm::SAT::BacktrackingDPLL->new;
+    my $agent = Algorithm::SAT::BacktrackingDPLLProb->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses = [

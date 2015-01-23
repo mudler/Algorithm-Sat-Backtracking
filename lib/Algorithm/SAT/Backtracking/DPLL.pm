@@ -1,4 +1,4 @@
-package Algorithm::SAT::BacktrackingDPLL;
+package Algorithm::SAT::Backtracking::DPLL;
 use base 'Algorithm::SAT::Backtracking';
 use Storable qw(dclone);
 use Data::Dumper;
@@ -41,15 +41,21 @@ sub solve {
 
     return 0 if !$self->_consistency_check( $clauses, $model );
 
-    #XXX: not working
-    $self->_pure($_)
-        ? ( $model->{$_} = 1 and $self->_remove_clause_if_contains( $_, $clauses ) )
-        : $self->_pure( "-" . $_ )
-        ? ( $model->{$_} = 0 and $self->_remove_clause_if_contains( $_, $clauses ) )
-        : ()
-        for @{$variables};
-    return $model if ( @{$clauses} == 0 );    #we were lucky
-                                              # XXX: end
+
+    # TODO: pure unit optimization
+    # XXX: not working
+
+    #   $self->_pure($_)
+    #     ? ( $model->{$_} = 1 and $self->_remove_clause_if_contains( $_, $clauses ) )
+    #     : $self->_pure( "-" . $_ )
+    #     ? ( $model->{$_} = 0 and $self->_remove_clause_if_contains( $_, $clauses ) )
+    #    : ()
+    #     for @{$variables};
+    # return $model if ( @{$clauses} == 0 );    #we were lucky
+
+    # XXX: end
+
+
       # Choose a new value to test by simply looping over the possible variables
       # and checking to see if the variable has been given a value yet.
 

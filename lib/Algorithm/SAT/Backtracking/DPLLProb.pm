@@ -1,9 +1,9 @@
-package Algorithm::SAT::BacktrackingDPLLProb;
-use base 'Algorithm::SAT::BacktrackingDPLL';
+package Algorithm::SAT::Backtracking::DPLLProb;
+use base 'Algorithm::SAT::Backtracking::DPLL';
 use List::Util qw(shuffle);
 
 sub _choice {
-    my $self=shift;
+    my $self      = shift;
     my $variables = shift;
     my $model     = shift;
     my $choice

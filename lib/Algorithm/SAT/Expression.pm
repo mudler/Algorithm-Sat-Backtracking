@@ -149,7 +149,7 @@ Uses L<Algorithm::SAT::Backtracking> to return a model that satisfies the expres
 
 Allow to change the SAT Algorithm used to solve the given expression
 
-     my $exp_simple_backtracking = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking");
+     my $exp_simple_backtracking = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLL");
 
 
 =head1 LICENSE

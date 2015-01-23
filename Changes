@@ -1,7 +1,8 @@
 Revision history for Perl extension Algorithm-SAT-Backtracking
 
 {{$NEXT}}
- 
+
+0.05 2015-01-23T10:42:36Z
     - code refactoring, added DPLL variant
 
 0.04 2014-12-07T16:50:57Z
@@ -19,4 +20,5 @@ Revision history for Perl extension Algorithm-SAT-Backtracking
 0.01 2014-12-01T14:45:58Z
 
     - first release
+
 

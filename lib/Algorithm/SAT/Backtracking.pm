@@ -15,7 +15,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.05";
+our $VERSION = "0.06";
 
 sub new {
     return bless {}, shift;
@@ -62,10 +62,8 @@ sub solve {
     # Choose a new value to test by simply looping over the possible variables
     # and checking to see if the variable has been given a value yet.
 
-    my $choice;
-    foreach my $variable ( @{$variables} ) {
-        $choice = $variable and last if ( !exists $model->{$variable} );
-    }
+    my $choice = $self->_choice( $variables, $model );
+
 
     # If there are no more variables to try, return false.
 
@@ -78,6 +76,18 @@ sub solve {
         || $self->solve( $variables, $clauses,
         $self->update( $model, $choice, 0 ) );    #false
 }
+
+sub _choice {
+    my $self      = shift;
+    my $variables = shift;
+    my $model     = shift;
+    my $choice;
+    foreach my $variable ( @{$variables} ) {
+        $choice = $variable and last if ( !exists $model->{$variable} );
+    }
+    return $choice;
+}
+
 
 # ### update
 # Copies the model, then sets `choice` = `value` in the model, and returns it.

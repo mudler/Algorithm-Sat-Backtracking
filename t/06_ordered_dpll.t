@@ -1,9 +1,11 @@
 use strict;
 use Test::More 0.98;
+use Algorithm::SAT::Backtracking::Ordered;
 use_ok("Algorithm::SAT::Expression");
+use_ok("Algorithm::SAT::Backtracking::Ordered::DPLL");
 subtest "and()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::Backtracking::DPLL");
+        "Algorithm::SAT::Backtracking::Ordered::DPLL");
     $expr->and( "blue", "green" );
     $expr->and('pink');
     ok( defined $expr->{_literals}->{pink},
@@ -22,14 +24,14 @@ subtest "and()" => sub {
 
 subtest "or()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::Backtracking::DPLL");
+        "Algorithm::SAT::Backtracking::Ordered::DPLL");
     $expr->or( "blue", "green" );
     $expr->or('pink');
     $expr->or( 'purple', '-yellow', 'green' );
     ok( !!grep { "@{$_}" eq "blue green" } @{ $expr->{_expr} } );
 
     $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::Backtracking::DPLL");
+        "Algorithm::SAT::Backtracking::Ordered::DPLL");
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );
@@ -42,22 +44,30 @@ subtest "or()" => sub {
             @{ $expr->{_expr} } );
     ok( !!grep { "@{$_}" eq join( " ", '-baz@1.2', 'bar@2.2' ) }
             @{ $expr->{_expr} } );
-    is_deeply(
-        $expr->solve,
-        {   'bar@2.2' => 1,
-            'bar@2.3' => 1,
-            'foo@2.3' => 1,
-            'baz@2.3' => 1,
-            'foo@2.1' => 1
-        },
-        "solving"
-    );
+    my $ordered_hash = $expr->solve;
+    my $solution     = {
+        'bar@2.2' => 1,
+        'bar@2.3' => 1,
+        'foo@2.3' => 1,
+        'baz@2.3' => 1,
+        'foo@2.1' => 1
+    };
+
+    while (
+        my ( $k, $v ) = each(
+            %{$solution}
+
+        )
+        )
+    {
+        is( $ordered_hash->get($k), $v, "$k=>$v" );
+    }
 
 };
 
 subtest "xor()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::Backtracking::DPLL");
+        "Algorithm::SAT::Backtracking::Ordered::DPLL");
     $expr->xor( "foo", "bar" );
     ok( !!grep { "@{$_}" eq "-foo -bar" } @{ $expr->{_expr} } );
     $expr->xor( "foo", "bar", "baz" );
@@ -68,8 +78,8 @@ subtest "xor()" => sub {
 
 subtest "solve()" => sub {
     my $exp = Algorithm::SAT::Expression->new->with(
-        "Algorithm::SAT::Backtracking::DPLL");
-    my $backtrack = Algorithm::SAT::Backtracking->new;
+        "Algorithm::SAT::Backtracking::Ordered::DPLL");
+    my $backtrack = Algorithm::SAT::Backtracking::Ordered->new;
     $exp->or( 'blue',  'green',  '-yellow' );
     $exp->or( '-blue', '-green', 'yellow' );
     $exp->or( 'pink',  'purple', 'green', 'blue', '-yellow' );
@@ -81,7 +91,7 @@ subtest "solve()" => sub {
 };
 
 subtest "_pure()" => sub {
-    my $agent = Algorithm::SAT::Backtracking::DPLL->new;
+    my $agent = Algorithm::SAT::Backtracking::Ordered::DPLL->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses = [
@@ -101,7 +111,7 @@ subtest "_pure()" => sub {
 
 #todo: testfiles for _remove_literal , _up and _pure
 subtest "_remove_literal()" => sub {
-    my $agent = Algorithm::SAT::Backtracking::DPLL->new;
+    my $agent = Algorithm::SAT::Backtracking::Ordered::DPLL->new;
 
     my $clauses = [
         [ 'blue',  'green',  '-yellow' ],
@@ -124,18 +134,15 @@ subtest "_remove_literal()" => sub {
 };
 
 subtest "_up()" => sub {
-    my $agent     = Algorithm::SAT::Backtracking::DPLL->new;
+    my $agent     = Algorithm::SAT::Backtracking::Ordered::DPLL->new;
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses   = [
         [ 'blue',  'green',  '-yellow' ],
         [ '-blue', '-green', 'yellow' ],
         [ 'pink',  'purple', 'green', 'blue', '-yellow', 'z' ], ['-z']
     ];
-
-    my $model = $agent->_up( $variables, $clauses );
-    is( $model->{z}, 0, "z is false" );
-    is_deeply( $model, { z => 0 }, "model is correct" );
-    is_deeply(
+    my $model = $agent->_up( $variables, $clauses, Hash::Ordered->new );
+     is_deeply(
         $clauses,
         [   [ 'blue',  'green',  '-yellow' ],
             [ '-blue', '-green', 'yellow' ],
@@ -144,10 +151,12 @@ subtest "_up()" => sub {
         ],
         "z is removed from OR clauses"
     );
+    is( $model->get("z"), 0, "z is false" );
+
 };
 
 subtest "_pure()" => sub {
-    my $agent = Algorithm::SAT::Backtracking::DPLL->new;
+    my $agent = Algorithm::SAT::Backtracking::Ordered::DPLL->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses = [
@@ -166,7 +175,7 @@ subtest "_pure()" => sub {
 };
 
 subtest "_remove_clause_if_contains()" => sub {
-    my $agent = Algorithm::SAT::Backtracking::DPLL->new;
+    my $agent = Algorithm::SAT::Backtracking::Ordered::DPLL->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
     my $clauses = [
@@ -176,8 +185,7 @@ subtest "_remove_clause_if_contains()" => sub {
         ['-z']
     ];
 
-    $agent->_remove_clause_if_contains( "yellow",
-        $clauses );
+    $agent->_remove_clause_if_contains( "yellow", $clauses );
     is_deeply(
         $clauses,
         [   [ 'blue', 'green', '-yellow' ],
@@ -193,8 +201,7 @@ subtest "_remove_clause_if_contains()" => sub {
         [ 'pink', 'purple', 'green', 'blue', '-yellow' ],
         ['-z']
     ];
-    $agent->_remove_clause_if_contains( "green",
-        $clauses );
+    $agent->_remove_clause_if_contains( "green", $clauses );
     is_deeply(
         $clauses,
         [ [ '-blue', '-green', 'yellow' ], ['-z'] ],
@@ -207,8 +214,7 @@ subtest "_remove_clause_if_contains()" => sub {
         [ 'pink', 'purple', 'green', 'blue', '-yellow' ],
         ['-z']
     ];
-    $agent->_remove_clause_if_contains( "-green",
-        $clauses );
+    $agent->_remove_clause_if_contains( "-green", $clauses );
     is_deeply(
         $clauses,
         [   [ 'blue', 'green', '-yellow' ],
@@ -223,8 +229,7 @@ subtest "_remove_clause_if_contains()" => sub {
         [ 'pink', 'purple', 'green', 'blue', '-yellow' ],
         ['-z']
     ];
-    $agent->_remove_clause_if_contains( "-z",
-        $clauses );
+    $agent->_remove_clause_if_contains( "-z", $clauses );
     is_deeply(
         $clauses,
         [   [ 'blue',  'green',  '-yellow' ],

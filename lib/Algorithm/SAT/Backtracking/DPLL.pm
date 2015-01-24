@@ -1,7 +1,18 @@
 package Algorithm::SAT::Backtracking::DPLL;
-use base 'Algorithm::SAT::Backtracking';
 use Storable qw(dclone);
 use Data::Dumper;
+
+# this allow to switch the parent implementation (needed for the Ordered alternative)
+sub import {
+    my $class = shift;
+    my $flag  = shift;
+    if ($flag) {
+        eval "use base '$flag'";
+    }
+    else {
+        eval "use base 'Algorithm::SAT::Backtracking'";
+    }
+}
 
 sub solve {
 
@@ -41,25 +52,23 @@ sub solve {
 
     return 0 if !$self->_consistency_check( $clauses, $model );
 
-
     # TODO: pure unit optimization
     # XXX: not working
 
-    #   $self->_pure($_)
-    #     ? ( $model->{$_} = 1 and $self->_remove_clause_if_contains( $_, $clauses ) )
-    #     : $self->_pure( "-" . $_ )
-    #     ? ( $model->{$_} = 0 and $self->_remove_clause_if_contains( $_, $clauses ) )
-    #    : ()
-    #     for @{$variables};
-    # return $model if ( @{$clauses} == 0 );    #we were lucky
+#   $self->_pure($_)
+#     ? ( $model->{$_} = 1 and $self->_remove_clause_if_contains( $_, $clauses ) )
+#     : $self->_pure( "-" . $_ )
+#     ? ( $model->{$_} = 0 and $self->_remove_clause_if_contains( $_, $clauses ) )
+#    : ()
+#     for @{$variables};
+# return $model if ( @{$clauses} == 0 );    #we were lucky
 
     # XXX: end
 
+    # Choose a new value to test by simply looping over the possible variables
+    # and checking to see if the variable has been given a value yet.
 
-      # Choose a new value to test by simply looping over the possible variables
-      # and checking to see if the variable has been given a value yet.
-
-    my $choice = $self->_choice($variables,$model);
+    my $choice = $self->_choice( $variables, $model );
 
     # If there are no more variables to try, return false.
 
@@ -71,16 +80,6 @@ sub solve {
         $self->update( $model, $choice, 1 ) )    #true
         || $self->solve( $variables, $clauses,
         $self->update( $model, $choice, 0 ) );    #false
-}
-
-sub _choice{
-    my $self=shift;
-    my $variables=shift;
-    my $model=shift;
-    foreach my $variable ( @{$variables} ) {
-        $choice = $variable and last if ( !exists $model->{$variable} );
-    }
-    return $choice;
 }
 
 sub _consistency_check {
@@ -203,7 +202,7 @@ sub _delete_from_index {
 }
 
 sub _remove_clause_if_contains {
-    my $self=shift;
+    my $self    = shift;
     my $literal = shift;
     my $list    = shift;
     my $index;

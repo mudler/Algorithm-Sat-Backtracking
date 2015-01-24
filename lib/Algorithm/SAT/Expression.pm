@@ -22,7 +22,7 @@ sub new {
 sub with {
     my $self = shift;
     if ( eval "require $_[0];1;" ) {
-        $self->{_implementation} = shift;
+        $self->{_implementation} = shift; $self->{_implementation}->import();
     }
     else {
         croak "The '$_[0]' could not be loaded";

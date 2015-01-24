@@ -1,3 +1,5 @@
+requires 'Hash::Ordered';
+requires 'List::Util';
 requires 'perl', '5.008001';
 
 on configure => sub {

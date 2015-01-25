@@ -115,5 +115,9 @@ it under the same terms as Perl itself.
 
 mudler E<lt>mudler@dark-lab.netE<gt>
 
+=head1 SEE ALSO
+
+L<Algorithm::SAT::Expression>, L<Algorithm::SAT::Backtracking::DPLL>, L<Algorithm::SAT::Backtracking>, L<Algorithm::SAT::Backtracking::Ordered::DPLL>
+
 =cut
 

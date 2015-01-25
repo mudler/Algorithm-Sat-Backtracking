@@ -15,7 +15,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.07";
+our $VERSION = "0.08";
 
 sub new {
     return bless {}, shift;
@@ -189,13 +189,11 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
 
 Algorithm::SAT::Backtracking is a pure Perl implementation of a simple SAT Backtracking solver.
 
-In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as I<SATISFIABILITY> or I<SAT>) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values B<TRUE> or B<FALSE> in such a way that the formula evaluates to B<TRUE>.
-
-If this is the case, the formula is called satisfiable. On the other hand, if no such assignment exists, the function expressed by the formula is identically B<FALSE> for all possible variable assignments and the formula is unsatisfiable.
+In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as I<SATISFIABILITY> or I<SAT>) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values B<TRUE> or B<FALSE> in such a way that the formula evaluates to B<TRUE>. If this is the case, the formula is called satisfiable. On the other hand, if no such assignment exists, the function expressed by the formula is identically B<FALSE> for all possible variable assignments and the formula is unsatisfiable.
 
 For example, the formula "a AND NOT b" is satisfiable because one can find the values a = B<TRUE> and b = B<FALSE>, which make (a AND NOT b) = TRUE. In contrast, "a AND NOT a" is unsatisfiable. More: L<https://en.wikipedia.org/wiki/Boolean_satisfiability_problem> .
 
-Look also at the test file for an example of usage.
+Have a look also at the tests file for an example of usage.
 
 L<Algorithm::SAT::Expression> use this module to solve Boolean expressions.
 
@@ -254,6 +252,10 @@ it under the same terms as Perl itself.
 =head1 AUTHOR
 
 mudler E<lt>mudler@dark-lab.netE<gt>
+
+=head1 SEE ALSO
+
+L<Algorithm::SAT::Expression>, L<Algorithm::SAT::Backtracking::DPLL>, L<Algorithm::SAT::Backtracking::Ordered>, L<Algorithm::SAT::Backtracking::Ordered::DPLL>
 
 =cut
 

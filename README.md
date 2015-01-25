@@ -31,13 +31,11 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
 
 Algorithm::SAT::Backtracking is a pure Perl implementation of a simple SAT Backtracking solver.
 
-In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as _SATISFIABILITY_ or _SAT_) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values **TRUE** or **FALSE** in such a way that the formula evaluates to **TRUE**.
-
-If this is the case, the formula is called satisfiable. On the other hand, if no such assignment exists, the function expressed by the formula is identically **FALSE** for all possible variable assignments and the formula is unsatisfiable.
+In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as _SATISFIABILITY_ or _SAT_) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values **TRUE** or **FALSE** in such a way that the formula evaluates to **TRUE**. If this is the case, the formula is called satisfiable. On the other hand, if no such assignment exists, the function expressed by the formula is identically **FALSE** for all possible variable assignments and the formula is unsatisfiable.
 
 For example, the formula "a AND NOT b" is satisfiable because one can find the values a = **TRUE** and b = **FALSE**, which make (a AND NOT b) = TRUE. In contrast, "a AND NOT a" is unsatisfiable. More: [https://en.wikipedia.org/wiki/Boolean\_satisfiability\_problem](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) .
 
-Look also at the test file for an example of usage.
+Have a look also at the tests file for an example of usage.
 
 [Algorithm::SAT::Expression](https://metacpan.org/pod/Algorithm::SAT::Expression) use this module to solve Boolean expressions.
 
@@ -96,3 +94,7 @@ it under the same terms as Perl itself.
 # AUTHOR
 
 mudler <mudler@dark-lab.net>
+
+# SEE ALSO
+
+[Algorithm::SAT::Expression](https://metacpan.org/pod/Algorithm::SAT::Expression), [Algorithm::SAT::Backtracking::DPLL](https://metacpan.org/pod/Algorithm::SAT::Backtracking::DPLL), [Algorithm::SAT::Backtracking::Ordered](https://metacpan.org/pod/Algorithm::SAT::Backtracking::Ordered), [Algorithm::SAT::Backtracking::Ordered::DPLL](https://metacpan.org/pod/Algorithm::SAT::Backtracking::Ordered::DPLL)

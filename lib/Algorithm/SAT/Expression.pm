@@ -5,7 +5,7 @@ use warnings;
 require Algorithm::SAT::Backtracking;
 use Storable qw(dclone);
 use Carp qw(croak);
-our $VERSION = "0.05";
+our $VERSION = "0.07";
 
 # Boolean expression builder.  Note that the connector for clauses is `OR`;
 # so, when calling the instance methods `xor`, `and`, and `or`, the clauses

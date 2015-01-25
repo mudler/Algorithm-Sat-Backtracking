@@ -15,7 +15,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.06";
+our $VERSION = "0.07";
 
 sub new {
     return bless {}, shift;
@@ -162,6 +162,18 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
 
 =head1 SYNOPSIS
 
+
+    # You can use it with Algorithm::SAT::Expression
+    use Algorithm::SAT::Expression;
+
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking"); #Uses Algorithm::SAT::Backtracking by default, you can use "with()" to specify other implementations
+    $expr->or( '-foo@2.1', 'bar@2.2' );
+    $expr->or( '-foo@2.3', 'bar@2.2' );
+    $expr->or( '-baz@2.3', 'bar@2.3' );
+    $expr->or( '-baz@1.2', 'bar@2.2' );
+    my $model = $exp->solve();
+
+    # Or you can use it directly:
     use Algorithm::SAT::Backtracking;
     my $solver = Algorithm::SAT::Backtracking->new;
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
@@ -172,12 +184,6 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
     ];
 
     my $model = $solver->solve( $variables, $clauses );
-
-    $model = {
-          'green' => 1,
-          'yellow' => 1,
-          'blue' => 1
-    }
 
 =head1 DESCRIPTION
 
@@ -208,7 +214,7 @@ This means it looks something like this:
 
 Hence, each row means an B<AND>, while a list groups two or more B<OR> clauses.
 
-Returns 0 if the expression can't be solved with the given clauses, the model otherwise.
+Returns 0 if the expression can't be solved with the given clauses, the model otherwise in form of a hash .
 
 Have a look at L<Algorithm::SAT::Expression> to see how to use it in a less painful way.
 

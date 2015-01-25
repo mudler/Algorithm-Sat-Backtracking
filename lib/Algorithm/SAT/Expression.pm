@@ -125,7 +125,7 @@ Algorithm::SAT::Expression - A class that represent an expression for L<Algorith
 
 Algorithm::SAT::Expression is a class that helps to build an expression to solve with L<Algorithm::SAT::Backtracking>.
 
-Look also at the test file for an example of usage.
+Have a look also at the tests file for an example of usage.
 
 =head1 METHODS
 
@@ -144,12 +144,17 @@ Takes the inputs and build an B<XOR> expression for it
 =head2 solve()
 
 Uses L<Algorithm::SAT::Backtracking> to return a model that satisfies the expression.
+The model it's a hash containing in the keys the literal and as the value if their presence represented by a 1 and the absence by a 0.
+
+Note: if you use the Ordered implementation, the result is a L<Hash::Ordered>.
 
 =head2 with()
 
 Allow to change the SAT Algorithm used to solve the given expression
 
      my $exp_simple_backtracking = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLL");
+
+if you don't request a specific implementation, defaults to L<Algorithm::SAT::Backtracking>.
 
 
 =head1 LICENSE

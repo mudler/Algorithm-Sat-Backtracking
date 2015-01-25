@@ -161,6 +161,9 @@ sub _remove_literal {
         and $model->{$literal} == 0;    #avoid cycle if already set
         #remove the literal from the model (set to false)
     $model->{$literal} = 0;
+
+    #remove the literal from the model (set to false) and delete it from index
+
     $self->_delete_from_index( $literal, $clauses );
 
     return 1;
@@ -179,7 +182,7 @@ sub _add_literal {
             if $model
         and exists $model->{$literal}
         and $model->{$literal} == 1;    #avoid cycle if already set
-        #remove the literal from the model (set to false)
+     #remove the literal from the model (set to false) and delete it from index
     $model->{$literal} = 1;
     $self->_delete_from_index( $literal, $clauses );
     return 1;
@@ -215,3 +218,64 @@ sub _remove_clause_if_contains {
 }
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+Algorithm::SAT::Backtracking::DPLL - A DPLL Backtracking SAT solver written in pure Perl
+
+=head1 SYNOPSIS
+
+
+    # You can use it with Algorithm::SAT::Expression
+    use Algorithm::SAT::Expression;
+
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking"); #Uses Algorithm::SAT::Backtracking by default, you can use "with()" to specify other implementations
+    $expr->or( '-foo@2.1', 'bar@2.2' );
+    $expr->or( '-foo@2.3', 'bar@2.2' );
+    $expr->or( '-baz@2.3', 'bar@2.3' );
+    $expr->or( '-baz@1.2', 'bar@2.2' );
+    my $model = $exp->solve();
+
+    # Or you can use it directly:
+    use Algorithm::SAT::Backtracking;
+    my $solver = Algorithm::SAT::Backtracking->new;
+    my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
+    my $clauses = [
+        [ 'blue',  'green',  '-yellow' ],
+        [ '-blue', '-green', 'yellow' ],
+        [ 'pink', 'purple', 'green', 'blue', '-yellow' ]
+    ];
+
+    my $model = $solver->solve( $variables, $clauses );
+
+=head1 DESCRIPTION
+
+Algorithm::SAT::Backtracking::DPLL is a pure Perl implementation of a SAT Backtracking solver.
+
+Look at L<Algorithm::SAT::Backtracking> for a theory description.
+
+The DPLL variant applies the "unit propagation" and the "pure literal" technique to be faster.
+
+Look also at the tests file for an example of usage.
+
+L<Algorithm::SAT::Expression> use this module to solve Boolean expressions.
+
+=head1 METHODS
+
+Inherits all the methods from L<Algorithm::SAT::Backtracking> and implements new private methods to use the unit propagation and pure literal rule techniques.
+
+=head1 LICENSE
+
+Copyright (C) mudler.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHOR
+
+mudler E<lt>mudler@dark-lab.netE<gt>
+
+=cut
+

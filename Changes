@@ -3,6 +3,7 @@ Revision history for Perl extension Algorithm-SAT-Backtracking
 {{$NEXT}}
 
     - Added DPLL Ordered variant, keeps hash ordering when building the solution
+    - updating POD
 
 0.05 2015-01-23T10:42:36Z
     - code refactoring, added DPLL variant

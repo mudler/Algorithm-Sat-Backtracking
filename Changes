@@ -2,6 +2,12 @@ Revision history for Perl extension Algorithm-SAT-Backtracking
 
 {{$NEXT}}
 
+0.09 2015-01-30T18:01:11Z
+
+    - code cleanup 
+    - fixing test file for Probabilistic variant
+    - POD fixes and adding POD for Probabilistic variant
+
 0.08 2015-01-25T16:27:13Z
 
     - POD fixes

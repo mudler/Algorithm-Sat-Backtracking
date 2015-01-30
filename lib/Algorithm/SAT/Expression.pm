@@ -3,7 +3,6 @@ use 5.008001;
 use strict;
 use warnings;
 require Algorithm::SAT::Backtracking;
-use Storable qw(dclone);
 use Carp qw(croak);
 our $VERSION = "0.08";
 
@@ -35,7 +34,6 @@ sub with {
 sub or {
     my $self = shift;
     $self->_ensure(@_);
-    my $or = dclone( \@_ );
     push( @{ $self->{_expr} }, [@_] );
     return $self;
 }

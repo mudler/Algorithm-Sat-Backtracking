@@ -26,7 +26,7 @@ subtest "satisfiable()" => sub {
     my $t2_model
         = { pink => 1, purple => 0, green => 0, yellow => 1, red => 0 };
     is( $agent->satisfiable( [ 'purple', '-pink' ], $t2_model ),
-        0, "Clause 'purple -pink' satisfiable" );
+        0, "Clause 'purple -pink' unsatisfiable" );
     is( $agent->satisfiable( [ 'orange', '-blue' ], $t2_model ),
         undef, "Clause 'orange -blue' satisfiable = 'undef'" );
     is( $agent->satisfiable( [ 'yellow', '-blue' ], $t2_model ),

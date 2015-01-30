@@ -1,7 +1,8 @@
 use strict;
 use Test::More 0.98;
 use Algorithm::SAT::Backtracking;
-plan skip_all   => 'Still experimental';
+
+#plan skip_all   => 'Still experimental';
 use_ok("Algorithm::SAT::Expression");
 use_ok("Algorithm::SAT::Backtracking::DPLLProb");
 
@@ -31,9 +32,9 @@ subtest "or()" => sub {
     $expr->or('pink');
     $expr->or( 'purple', '-yellow', 'green' );
     ok( !!grep { "@{$_}" eq "blue green" } @{ $expr->{_expr} } );
-
     $expr = Algorithm::SAT::Expression->new->with(
         "Algorithm::SAT::Backtracking::DPLLProb");
+    my $prob = Algorithm::SAT::Backtracking::DPLLProb->new;
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );
@@ -46,16 +47,12 @@ subtest "or()" => sub {
             @{ $expr->{_expr} } );
     ok( !!grep { "@{$_}" eq join( " ", '-baz@1.2', 'bar@2.2' ) }
             @{ $expr->{_expr} } );
-    is_deeply(
-        $expr->solve,
-        {   'bar@2.2' => 1,
-            'bar@2.3' => 1,
-            'foo@2.3' => 1,
-            'baz@2.3' => 1,
-            'foo@2.1' => 1
-        },
-        "solving"
-    );
+    my $model = $expr->solve;
+     #XXX: ?
+    foreach my $clause ( @{ $expr->{_expr} } ) {
+        is( $prob->satisfiable( $clause, $model ),
+            1, "@{$clause} is satisfiable against the model" );
+    }
 
 };
 

@@ -1,7 +1,7 @@
 package Algorithm::SAT::Backtracking::DPLL;
 use Storable qw(dclone);
 use Data::Dumper;
-our $VERSION = "0.10";
+our $VERSION = "0.11";
 
 # this allow to switch the parent implementation (needed for the Ordered alternative)
 sub import {

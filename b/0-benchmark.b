@@ -4,7 +4,7 @@ use Benchmark qw(:all);
 use Data::Dumper;
 use Algorithm::SAT::Expression;
 my $result = cmpthese(
-    1000,
+    10000,
     {   'SAT::Backtracking' => sub {
             my $expr = Algorithm::SAT::Expression->new;
             $expr->or( '-foo@2.1', 'bar@2.2' );

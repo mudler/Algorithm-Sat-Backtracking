@@ -2,6 +2,7 @@ package Algorithm::SAT::Backtracking::DPLLProb;
 use base 'Algorithm::SAT::Backtracking::DPLL';
 use List::Util qw(shuffle);
 use Storable qw(dclone);
+our $VERSION = "0.10";
 
 sub _choice {
     my $self      = shift;

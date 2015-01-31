@@ -3,6 +3,7 @@ use Hash::Ordered;
 use base "Algorithm::SAT::Backtracking::DPLL";
 use Algorithm::SAT::Backtracking::DPLL
     "Algorithm::SAT::Backtracking::Ordered";
+our $VERSION = "0.10";
 
 ##Ordered implementation, of course has its costs
 sub solve {

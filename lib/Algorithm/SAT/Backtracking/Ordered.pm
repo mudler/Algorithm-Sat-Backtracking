@@ -2,6 +2,7 @@ package Algorithm::SAT::Backtracking::Ordered;
 use base 'Algorithm::SAT::Backtracking';
 use Hash::Ordered;
 ##Ordered implementation, of course has its costs
+our $VERSION = "0.10";
 
 sub _choice {
     my $self      = shift;

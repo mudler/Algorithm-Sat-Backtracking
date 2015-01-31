@@ -2,7 +2,7 @@ use strict;
 use Test::More 0.98;
 use Data::Dumper;
 
-use_ok("Algorithm::SAT::Backtracking");
+use Algorithm::SAT::Backtracking;
 
 my $agent = Algorithm::SAT::Backtracking->new;
 

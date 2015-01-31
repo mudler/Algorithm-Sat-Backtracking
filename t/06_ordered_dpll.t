@@ -1,8 +1,9 @@
 use strict;
 use Test::More 0.98;
 use Algorithm::SAT::Backtracking::Ordered;
-use_ok("Algorithm::SAT::Expression");
-use_ok("Algorithm::SAT::Backtracking::Ordered::DPLL");
+use Algorithm::SAT::Expression;
+use Algorithm::SAT::Backtracking::Ordered::DPLL;
+
 subtest "and()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
         "Algorithm::SAT::Backtracking::Ordered::DPLL");

@@ -1,7 +1,7 @@
 use strict;
 use Test::More 0.98;
 use Algorithm::SAT::Backtracking;
-use_ok("Algorithm::SAT::Expression");
+use Algorithm::SAT::Expression;
 
 subtest "and()" => sub {
     my $expr = Algorithm::SAT::Expression->new;

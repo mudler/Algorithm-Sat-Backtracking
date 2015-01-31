@@ -3,8 +3,8 @@ use Test::More 0.98;
 use Algorithm::SAT::Backtracking;
 
 #plan skip_all   => 'Still experimental';
-use_ok("Algorithm::SAT::Expression");
-use_ok("Algorithm::SAT::Backtracking::DPLLProb");
+use Algorithm::SAT::Expression;
+use Algorithm::SAT::Backtracking::DPLLProb;
 
 subtest "and()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(

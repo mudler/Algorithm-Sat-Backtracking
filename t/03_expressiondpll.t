@@ -1,6 +1,6 @@
 use strict;
 use Test::More 0.98;
-use_ok("Algorithm::SAT::Expression");
+use Algorithm::SAT::Expression;
 subtest "and()" => sub {
     my $expr = Algorithm::SAT::Expression->new->with(
         "Algorithm::SAT::Backtracking::DPLL");

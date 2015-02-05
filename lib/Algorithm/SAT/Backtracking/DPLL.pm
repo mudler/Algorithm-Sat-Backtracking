@@ -1,7 +1,9 @@
 package Algorithm::SAT::Backtracking::DPLL;
 use Storable qw(dclone);
 use Data::Dumper;
-our $VERSION = "0.11";
+use strict;
+use warnings;
+our $VERSION = "0.12";
 
 # this allow to switch the parent implementation (needed for the Ordered alternative)
 sub import {
@@ -200,7 +202,8 @@ sub _delete_from_index {
                 splice( @{$c}, $index, 1 );
                 $self->{_impurity}->{$string}--;
                 }
-                if $c->[$index] eq $string;    # remove certain elements
+                if $c->[$index]
+                and $c->[$index] eq $string;    # remove certain elements
         }
     }
 }
@@ -209,7 +212,7 @@ sub _remove_clause_if_contains {
     my $self    = shift;
     my $literal = shift;
     my $list    = shift;
-    my $index;
+    my $index   = 0;
     while ( $index < scalar @{$list} ) {
         splice( @{$list}, $index, 1 )
             if grep { $_ eq $literal } @{ $list->[$index] };

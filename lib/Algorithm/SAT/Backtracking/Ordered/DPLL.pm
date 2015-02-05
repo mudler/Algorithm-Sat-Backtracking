@@ -3,7 +3,9 @@ use Hash::Ordered;
 use base "Algorithm::SAT::Backtracking::DPLL";
 use Algorithm::SAT::Backtracking::DPLL
     "Algorithm::SAT::Backtracking::Ordered";
-our $VERSION = "0.11";
+use strict;
+use warnings;
+our $VERSION = "0.12";
 
 ##Ordered implementation, of course has its costs
 sub solve {
@@ -64,6 +66,7 @@ sub _choice {
     my $self      = shift;
     my $variables = shift;
     my $model     = shift;
+    my $choice;
     foreach my $variable ( @{$variables} ) {
         $choice = $variable and last if ( !$model->exists($variable) );
     }

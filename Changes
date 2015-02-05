@@ -2,6 +2,10 @@ Revision history for Perl extension Algorithm-SAT-Backtracking
 
 {{$NEXT}}
 
+0.12 2015-02-05T08:38:02Z
+
+    - cleanup, added more benchmarks
+
 0.11 2015-01-31T14:12:49Z
 
     - fixed benchmark file, versioning for algorithms introduced

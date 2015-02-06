@@ -4,12 +4,11 @@ use strict;
 use warnings;
 use Hash::Ordered;
 ##Ordered implementation, of course has its costs
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 sub _choice {
-    my $self      = shift;
-    my $variables = shift;
-    my $model     = shift;
+    my ( undef, $variables, $model ) = @_;
+
     my $choice;
     foreach my $variable ( @{$variables} ) {
         $choice = $variable and last if ( !$model->exists($variable) );
@@ -18,20 +17,18 @@ sub _choice {
 }
 
 sub solve {
-    my $self      = shift;
-    my $variables = shift;
-    my $clauses   = shift;
-    my $model     = defined $_[0] ? shift : Hash::Ordered->new;
+    my ( $self, $variables, $clauses, $model ) = @_;
+
+    $model = Hash::Ordered->new if !defined $model;
     return $self->SUPER::solve( $variables, $clauses, $model );
 }
 
 # ### update
 # Copies the model, then sets `choice` = `value` in the model, and returns it, keeping the order of keys.
 sub update {
-    my $self   = shift;
-    my $copy   = shift->clone;
-    my $choice = shift;
-    my $value  = shift;
+    my ( $self, $copy, $choice, $value ) = @_;
+    $copy = $copy->clone;
+
     $copy->set( $choice => $value );
     return $copy;
 }
@@ -39,9 +36,8 @@ sub update {
 # ### resolve
 # Resolve some variable to its actual value, or undefined.
 sub resolve {
-    my $self  = shift;
-    my $var   = shift;
-    my $model = shift;
+    my ( undef, $var, $model ) = @_;
+
     if ( substr( $var, 0, 1 ) eq "-" ) {
         my $value = $model->get( substr( $var, 1 ) );
         return !defined $value ? undef : $value == 0 ? 1 : 0;
@@ -52,7 +48,6 @@ sub resolve {
 }
 
 1;
-
 
 =encoding utf-8
 

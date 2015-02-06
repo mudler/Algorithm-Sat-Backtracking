@@ -15,7 +15,7 @@ use Storable qw(dclone);
 #
 # `[['blue', 'green'], ['green', '-yellow']]`
 
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 sub new {
     return bless {}, shift;
@@ -28,10 +28,8 @@ sub solve {
     # * `variables` is the list of all variables
     # * `clauses` is an array of clauses.
     # * `model` is a set of variable assignments.
-    my $self      = shift;
-    my $variables = shift;
-    my $clauses   = shift;
-    my $model     = defined $_[0] ? shift : {};
+    my ( $self, $variables, $clauses, $model ) = @_;
+    $model = {} if !defined $model;
 
     # If every clause is satisfiable, return the model which worked.
 
@@ -64,7 +62,6 @@ sub solve {
 
     my $choice = $self->_choice( $variables, $model );
 
-
     # If there are no more variables to try, return false.
 
     return 0 if ( !$choice );
@@ -78,9 +75,8 @@ sub solve {
 }
 
 sub _choice {
-    my $self      = shift;
-    my $variables = shift;
-    my $model     = shift;
+    my ( undef, $variables, $model ) = @_;
+
     my $choice;
     foreach my $variable ( @{$variables} ) {
         $choice = $variable and last if ( !exists $model->{$variable} );
@@ -88,14 +84,12 @@ sub _choice {
     return $choice;
 }
 
-
 # ### update
 # Copies the model, then sets `choice` = `value` in the model, and returns it.
 sub update {
-    my $self   = shift;
-    my $copy   = dclone(shift);
-    my $choice = shift;
-    my $value  = shift;
+    my ( $self, $copy, $choice, $value ) = @_;
+    $copy = dclone($copy);
+
     $copy->{$choice} = $value;
     return $copy;
 }
@@ -103,9 +97,8 @@ sub update {
 # ### resolve
 # Resolve some variable to its actual value, or undefined.
 sub resolve {
-    my $self  = shift;
-    my $var   = shift;
-    my $model = shift;
+    my ( undef, $var, $model ) = @_;
+
     if ( substr( $var, 0, 1 ) eq "-" ) {
         my $value = $model->{ substr( $var, 1 ) };
         return !defined $value ? undef : $value == 0 ? 1 : 0;
@@ -118,10 +111,9 @@ sub resolve {
 # ### satisfiable
 # Determines whether a clause is satisfiable given a certain model.
 sub satisfiable {
-    my $self    = shift;
-    my $clauses = shift;
-    my $model   = shift;
-    my @clause  = @{$clauses};
+    my ( $self, $clauses, $model ) = @_;
+
+    my @clause = @{$clauses};
 
     # If every variable is false, then the clause is false.
     return 0
@@ -166,7 +158,7 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
     # You can use it with Algorithm::SAT::Expression
     use Algorithm::SAT::Expression;
 
-    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking"); #Uses Algorithm::SAT::Backtracking by default, you can use "with()" to specify other implementations
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking"); #Uses Algorithm::SAT::Backtracking by default, so with() it's not necessary in this case
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );

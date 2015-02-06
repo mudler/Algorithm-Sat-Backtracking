@@ -5,22 +5,18 @@ use Algorithm::SAT::Backtracking::DPLL
     "Algorithm::SAT::Backtracking::Ordered";
 use strict;
 use warnings;
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 ##Ordered implementation, of course has its costs
 sub solve {
-    my $self      = shift;
-    my $variables = shift;
-    my $clauses   = shift;
-    my $model     = defined $_[0] ? shift : Hash::Ordered->new;
+    my ( $self, $variables, $clauses, $model ) = @_;
+    $model = Hash::Ordered->new if !defined $model;
     return $self->SUPER::solve( $variables, $clauses, $model );
 }
 
 sub _up {
-    my $self      = shift;
-    my $variables = shift;
-    my $clauses   = shift;
-    my $model     = defined $_[0] ? shift : Hash::Ordered->new;
+    my ( $self, $variables, $clauses, $model ) = @_;
+    $model = Hash::Ordered->new if !defined $model;
 
     #Finding single clauses that must be true, and updating the model
     ( @{$_} != 1 )
@@ -44,10 +40,7 @@ sub _up {
 }
 
 sub _add_literal {
-    my $self    = shift;
-    my $literal = shift;
-    my $clauses = shift;
-    my $model   = shift;
+    my ( $self, $literal, $clauses, $model ) = @_;
     $literal
         = ( substr( $literal, 0, 1 ) eq "-" )
         ? $literal
@@ -63,9 +56,7 @@ sub _add_literal {
 }
 
 sub _choice {
-    my $self      = shift;
-    my $variables = shift;
-    my $model     = shift;
+    my ( $self, $variables, $model ) = @_;
     my $choice;
     foreach my $variable ( @{$variables} ) {
         $choice = $variable and last if ( !$model->exists($variable) );

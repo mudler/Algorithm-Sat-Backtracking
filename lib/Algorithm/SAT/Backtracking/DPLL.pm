@@ -3,12 +3,11 @@ use Storable qw(dclone);
 use Data::Dumper;
 use strict;
 use warnings;
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 # this allow to switch the parent implementation (needed for the Ordered alternative)
 sub import {
-    my $class = shift;
-    my $flag  = shift;
+    my ( $class, $flag ) = @_;
     if ($flag) {
         eval "use base '$flag'";
     }
@@ -24,11 +23,9 @@ sub solve {
     # * `variables` is the list of all variables
     # * `clauses` is an array of clauses.
     # * `model` is a set of variable assignments.
-    my $self      = shift;
-    my $variables = shift;
-    my $clauses   = shift;
-    my $model     = defined $_[0] ? shift : {};
-    my $impurity  = dclone($clauses);
+    my ( $self, $variables, $clauses, $model ) = @_;
+    $model = {} if !defined $model;
+    my $impurity = dclone($clauses);
 
     if ( !exists $self->{_impurity} ) {
         $self->{_impurity}->{$_}++ for ( map { @{$_} } @{$impurity} );
@@ -86,9 +83,7 @@ sub solve {
 }
 
 sub _consistency_check {
-    my $self    = shift;
-    my $clauses = shift;
-    my $model   = shift;
+    my ( $self, $clauses, $model ) = @_;
     return 0
         if (
         (   grep {
@@ -104,8 +99,7 @@ sub _consistency_check {
 }
 
 sub _pure {
-    my $self    = shift;
-    my $literal = shift;
+    my ( $self, $literal ) = @_;
 
     #     Pure literal rule
 
@@ -133,10 +127,8 @@ sub _pure {
 }
 
 sub _up {
-    my $self      = shift;
-    my $variables = shift;
-    my $clauses   = shift;
-    my $model     = defined $_[0] ? shift : {};
+    my ( $self, $variables, $clauses, $model ) = @_;
+    $model = {} if !defined $model;
 
     #Finding single clauses that must be true, and updating the model
     ( @{$_} != 1 )
@@ -154,10 +146,8 @@ sub _up {
 }
 
 sub _remove_literal {
-    my $self    = shift;
-    my $literal = shift;
-    my $clauses = shift;
-    my $model   = shift;
+    my ( $self, $literal, $clauses, $model ) = @_;
+
     return
             if $model
         and exists $model->{$literal}
@@ -173,10 +163,8 @@ sub _remove_literal {
 }
 
 sub _add_literal {
-    my $self    = shift;
-    my $literal = shift;
-    my $clauses = shift;
-    my $model   = shift;
+    my ( $self, $literal, $clauses, $model ) = @_;
+
     $literal
         = ( substr( $literal, 0, 1 ) eq "-" )
         ? $literal
@@ -192,9 +180,8 @@ sub _add_literal {
 }
 
 sub _delete_from_index {
-    my $self   = shift;
-    my $string = shift;
-    my $list   = shift;
+    my ( $self, $string, $list ) = @_;
+
     foreach my $c ( @{$list} ) {
         next if @{$c} <= 1;
         for ( my $index = scalar( @{$c} ); $index >= 0; --$index ) {
@@ -209,10 +196,9 @@ sub _delete_from_index {
 }
 
 sub _remove_clause_if_contains {
-    my $self    = shift;
-    my $literal = shift;
-    my $list    = shift;
-    my $index   = 0;
+    my ( $self, $literal, $list ) = @_;
+
+    my $index = 0;
     while ( $index < scalar @{$list} ) {
         splice( @{$list}, $index, 1 )
             if grep { $_ eq $literal } @{ $list->[$index] };
@@ -235,7 +221,7 @@ Algorithm::SAT::Backtracking::DPLL - A DPLL Backtracking SAT solver written in p
     # You can use it with Algorithm::SAT::Expression
     use Algorithm::SAT::Expression;
 
-    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLL"); #Uses Algorithm::SAT::Backtracking by default, you can use "with()" to specify other implementations
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLL");
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );

@@ -4,12 +4,10 @@ use List::Util qw(shuffle);
 use Storable qw(dclone);
 use strict;
 use warnings;
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 sub _choice {
-    my $self      = shift;
-    my $variables = shift;
-    my $model     = shift;
+    my ( undef, $variables, $model ) = @_;
     my $choice;
     foreach my $variable ( shuffle( @{$variables} ) ) {
         $choice = $variable;
@@ -32,7 +30,7 @@ Algorithm::SAT::Backtracking::DPLLProb - A DPLL Probabilistic Backtracking SAT s
     # You can use it with Algorithm::SAT::Expression
     use Algorithm::SAT::Expression;
 
-    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLLProb"); #Uses Algorithm::SAT::Backtracking by default, you can use "with()" to specify other implementations
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLLProb");
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );

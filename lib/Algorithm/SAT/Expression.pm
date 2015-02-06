@@ -4,7 +4,7 @@ use strict;
 use warnings;
 require Algorithm::SAT::Backtracking;
 use Carp qw(croak);
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 # Boolean expression builder.  Note that the connector for clauses is `OR`;
 # so, when calling the instance methods `xor`, `and`, and `or`, the clauses
@@ -21,7 +21,8 @@ sub new {
 sub with {
     my $self = shift;
     if ( eval "require $_[0];1;" ) {
-        $self->{_implementation} = shift; $self->{_implementation}->import();
+        $self->{_implementation} = shift;
+        $self->{_implementation}->import();
     }
     else {
         croak "The '$_[0]' could not be loaded";
@@ -92,8 +93,7 @@ sub _ensure {
 }
 
 sub negate_literal {
-    my $self = shift;
-    my $var  = shift;
+    my ( undef, $var ) = @_;
 
     return ( substr( $var, 0, 1 ) eq "-" )
         ? substr( $var, 1 )
@@ -111,6 +111,9 @@ Algorithm::SAT::Expression - A class that represent an expression for L<Algorith
 
 =head1 SYNOPSIS
 
+
+    # with the default implementation (Algorithm::SAT::Backtracking)
+
     use Algorithm::SAT::Expression;
     my $exp = Algorithm::SAT::Expression->new;
     $exp->or( 'blue',  'green',  '-yellow' );
@@ -118,6 +121,17 @@ Algorithm::SAT::Expression - A class that represent an expression for L<Algorith
     $exp->or( 'pink',  'purple', 'green', 'blue', '-yellow' );
     my $model = $exp->solve();
     # $model  now is { 'yellow' => 1, 'green' => 1 }
+
+    # using a specific implementation
+
+    use Algorithm::SAT::Expression;
+    my $exp = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLL");
+    $exp->or( 'blue',  'green',  '-yellow' );
+    $exp->or( '-blue', '-green', 'yellow' );
+    $exp->or( 'pink',  'purple', 'green', 'blue', '-yellow' );
+    my $model = $exp->solve();
+    # $model  now is { 'yellow' => 1, 'green' => 1 }
+
 
 =head1 DESCRIPTION
 

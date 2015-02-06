@@ -8,7 +8,7 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
     # You can use it with Algorithm::SAT::Expression
     use Algorithm::SAT::Expression;
 
-    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking"); #Uses Algorithm::SAT::Backtracking by default, you can use "with()" to specify other implementations
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking"); #Uses Algorithm::SAT::Backtracking by default, so with() it's not necessary in this case
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );

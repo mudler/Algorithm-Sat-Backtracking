@@ -52,18 +52,10 @@ sub solve {
 
     return 0 if !$self->_consistency_check( $clauses, $model );
 
-    # TODO: pure unit optimization
-    # XXX: not working
+    # Pure Unit optimization
+    $self->_pure_unit( $variables, $clauses, $model );
 
-#   $self->_pure($_)
-#     ? ( $model->{$_} = 1 and $self->_remove_clause_if_contains( $_, $clauses ) )
-#     : $self->_pure( "-" . $_ )
-#     ? ( $model->{$_} = 0 and $self->_remove_clause_if_contains( $_, $clauses ) )
-#    : ()
-#     for @{$variables};
-# return $model if ( @{$clauses} == 0 );    #we were lucky
-
-    # XXX: end
+    return $model if ( @{$clauses} == 0 );    #we were lucky
 
     # Choose a new value to test by simply looping over the possible variables
     # and checking to see if the variable has been given a value yet.
@@ -82,6 +74,26 @@ sub solve {
         $self->update( $model, $choice, 0 ) );    #false
 }
 
+sub _pure_unit {
+    my ( $self, $variables, $clauses, $model ) = @_;
+    my @seen;
+    foreach my $var ( @{$variables} ) {
+        next if grep {$var} @seen;
+        if ( $self->_pure($var) ) {
+
+            # my $opposite = $self->_opposite($var);
+            $model->{$var} = 1;
+
+            # $model->{$opposite} = 0
+            #  if grep { $_ eq $opposite } ( @{$variables} );
+            # push( @seen, $var, $opposite );
+            push( @seen, $var );
+
+            $self->_remove_clause_if_contains( $var, $clauses );
+        }
+    }
+}
+
 sub _consistency_check {
     my ( $self, $clauses, $model ) = @_;
     return 0
@@ -98,18 +110,22 @@ sub _consistency_check {
 
 }
 
-sub _pure {
+sub _opposite {
     my ( $self, $literal ) = @_;
-
-    #     Pure literal rule
-
-    # if a variable only occurs positively in a formula, set it to true
-    # if a variable only occurs negated in a formula, set it to false
-
     my $opposite
         = substr( $literal, 0, 1 ) eq "-"
         ? substr( $literal, 1 )
         : "-" . $literal;
+    return $opposite;
+}
+
+sub _pure {
+    my ( $self, $literal ) = @_;
+
+ # Pure literal
+ # Returns true if the literal appear in the expression (and not the opposite)
+
+    my $opposite = $self->_opposite($literal);
     return 1
         if (
         (   exists $self->{_impurity}->{$literal}
@@ -121,8 +137,6 @@ sub _pure {
                 and $self->{_impurity}->{$opposite} == 0 )
         )
         );
-
-    #   print STDERR "$literal is IMpure\n" and
     return 0;
 }
 

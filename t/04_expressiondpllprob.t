@@ -81,7 +81,7 @@ subtest "solve()" => sub {
     }
 };
 
-subtest "_pure()" => sub {
+subtest "_pure()/_pure_unit()" => sub {
     my $agent = Algorithm::SAT::Backtracking::DPLLProb->new;
 
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple', 'z' ];
@@ -97,6 +97,34 @@ subtest "_pure()" => sub {
     is( $agent->_pure("green"),  0, "green is impure" );
     is( $agent->_pure("pink"),   1, "pink is pure" );
     is( $agent->_pure("z"),      0, "z is impure" );
+
+    my $exp = Algorithm::SAT::Expression->new->with(
+        "Algorithm::SAT::Backtracking::DPLLProb");
+    $exp->or( 'blue',  'green',  '-yellow' );
+    $exp->or( '-blue', '-green', 'yellow' );
+    $exp->or( 'pink',  'purple', 'green', 'blue', '-yellow' );
+    my $model = $exp->solve();
+    is( $model->{'pink'}, 1, "pink is true" );
+
+    $exp = Algorithm::SAT::Backtracking::DPLLProb->new;
+    my $impurity = [
+        [ 'blue',  'green',  '-yellow' ],
+        [ '-blue', '-green', 'yellow' ],
+        [ 'pink', 'purple', 'green', 'blue', '-yellow' ],
+    ];
+    $model   = {};
+    $clauses = [
+        [ 'blue',  'green',  '-yellow' ],
+        [ '-blue', '-green', 'yellow' ],
+        [ 'pink', 'purple', 'green', 'blue', '-yellow' ],
+        ['-z']
+    ];
+    $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
+    $exp->{_impurity}->{$_}++ for ( map { @{$_} } @{$impurity} );
+    $exp->_pure_unit( $variables, $clauses, $model );
+
+    is( $model->{'pink'}, 1, "pink is setted to true by _pure_unit()" );
+
 
 };
 

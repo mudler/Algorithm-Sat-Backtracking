@@ -14,6 +14,25 @@ sub solve {
     return $self->SUPER::solve( $variables, $clauses, $model );
 }
 
+sub _pure_unit {
+    my ( $self, $variables, $clauses, $model ) = @_;
+    my @seen;
+    foreach my $var ( @{$variables} ) {
+        next if grep {$var} @seen;
+        if ( $self->_pure($var) ) {
+
+            #    my $opposite = $self->_opposite($var);
+            $model->set( $var => 1 );
+
+            #  $model->set( $opposite => 0 )
+            #  if grep { $_ eq $opposite } ( @{$variables} );
+            # push( @seen, $var, $opposite );
+            push( @seen, $var );
+            $self->_remove_clause_if_contains( $var, $clauses );
+        }
+    }
+}
+
 sub _up {
     my ( $self, $variables, $clauses, $model ) = @_;
     $model = Hash::Ordered->new if !defined $model;

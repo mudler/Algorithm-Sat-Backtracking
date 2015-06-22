@@ -31,7 +31,7 @@ my $result = cmpthese(
             $expr->or( '-baz@1.2', 'bar@2.2' );
             $expr->solve;
         },
-            'Algorithm::SAT::Backtracking::Ordered' => sub {
+        'Algorithm::SAT::Backtracking::Ordered' => sub {
             my $expr = Algorithm::SAT::Expression->new->with(
                 "Algorithm::SAT::Backtracking::Ordered");
             $expr->or( '-foo@2.1', 'bar@2.2' );
@@ -39,7 +39,25 @@ my $result = cmpthese(
             $expr->or( '-baz@2.3', 'bar@2.3' );
             $expr->or( '-baz@1.2', 'bar@2.2' );
             $expr->solve;
-            }
+        },
+        'Algorithm::SAT::Backtracking::DPLLFreq' => sub {
+            my $expr = Algorithm::SAT::Expression->new->with(
+                "Algorithm::SAT::Backtracking::DPLLFreq");
+            $expr->or( '-foo@2.1', 'bar@2.2' );
+            $expr->or( '-foo@2.3', 'bar@2.2' );
+            $expr->or( '-baz@2.3', 'bar@2.3' );
+            $expr->or( '-baz@1.2', 'bar@2.2' );
+            $expr->solve;
+        },
+        'Algorithm::SAT::Backtracking::DPLLUnFreq' => sub {
+            my $expr = Algorithm::SAT::Expression->new->with(
+                "Algorithm::SAT::Backtracking::DPLLUnFreq");
+            $expr->or( '-foo@2.1', 'bar@2.2' );
+            $expr->or( '-foo@2.3', 'bar@2.2' );
+            $expr->or( '-baz@2.3', 'bar@2.3' );
+            $expr->or( '-baz@1.2', 'bar@2.2' );
+            $expr->solve;
+        }
 
     }
 );

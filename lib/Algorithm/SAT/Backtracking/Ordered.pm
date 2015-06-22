@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Hash::Ordered;
 ##Ordered implementation, of course has its costs
-our $VERSION = "0.13";
+our $VERSION = "0.14";
 
 sub _choice {
     my ( undef, $variables, $model ) = @_;

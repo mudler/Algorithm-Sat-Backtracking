@@ -1,4 +1,4 @@
-package Algorithm::SAT::Backtracking::DPLLProb;
+package Algorithm::SAT::Backtracking::DPLLUnFreq;
 use base 'Algorithm::SAT::Backtracking::DPLL';
 use List::Util qw(shuffle);
 use Storable qw(dclone);
@@ -8,12 +8,13 @@ our $VERSION = "0.14";
 
 sub _choice {
     my ( undef, $variables, $model ) = @_;
-    my $choice;
-    foreach my $variable ( shuffle( @{$variables} ) ) {
-        $choice = $variable;
-        last if ( !exists $model->{$variable} );
-    }
-    return $choice;
+
+    my %h_variables;
+
+    $h_variables{$_}++ for grep { !exists $model->{$_} } @{$variables}; #Build a hash with variables that wasn't already tried yet
+    return ~~
+        ( sort { $h_variables{$a} <=> $h_variables{$b} } keys %h_variables )
+        [0];    #choose the most unfrequently
 }
 
 1;
@@ -22,7 +23,7 @@ sub _choice {
 
 =head1 NAME
 
-Algorithm::SAT::Backtracking::DPLLProb - A DPLL Probabilistic Backtracking SAT solver written in pure Perl
+Algorithm::SAT::Backtracking::DPLLUnFreq - A DPLL Frequentist Backtracking SAT solver written in pure Perl
 
 =head1 SYNOPSIS
 
@@ -30,7 +31,7 @@ Algorithm::SAT::Backtracking::DPLLProb - A DPLL Probabilistic Backtracking SAT s
     # You can use it with Algorithm::SAT::Expression
     use Algorithm::SAT::Expression;
 
-    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLLProb");
+    my $expr = Algorithm::SAT::Expression->new->with("Algorithm::SAT::Backtracking::DPLLUnFreq");
     $expr->or( '-foo@2.1', 'bar@2.2' );
     $expr->or( '-foo@2.3', 'bar@2.2' );
     $expr->or( '-baz@2.3', 'bar@2.3' );
@@ -38,8 +39,8 @@ Algorithm::SAT::Backtracking::DPLLProb - A DPLL Probabilistic Backtracking SAT s
     my $model = $exp->solve();
 
     # Or you can use it directly:
-    use Algorithm::SAT::BacktrackingDPLLProb;
-    my $solver = Algorithm::SAT::Backtracking::DPLLProb->new;
+    use Algorithm::SAT::BacktrackingDPLLUnFreq;
+    my $solver = Algorithm::SAT::Backtracking::DPLLUnFreq->new;
     my $variables = [ 'blue', 'green', 'yellow', 'pink', 'purple' ];
     my $clauses = [
         [ 'blue',  'green',  '-yellow' ],
@@ -51,7 +52,7 @@ Algorithm::SAT::Backtracking::DPLLProb - A DPLL Probabilistic Backtracking SAT s
 
 =head1 DESCRIPTION
 
-Algorithm::SAT::Backtracking::DPLLProb is a pure Perl implementation of a SAT Backtracking solver.
+Algorithm::SAT::Backtracking::DPLLUnFreq is a pure Perl implementation of a SAT Backtracking solver.
 
 Look at L<Algorithm::SAT::Backtracking> for a theory description.
 
@@ -59,7 +60,7 @@ L<Algorithm::SAT::Expression> use this module to solve Boolean expressions.
 
 =head1 METHODS
 
-Inherits all the methods from L<Algorithm::SAT::Backtracking::DPLL> and in this variant C<_choice()> it's overrided to choose a random literal.
+Inherits all the methods from L<Algorithm::SAT::Backtracking::DPLL> and in this variant C<_choice()> it's overrided to choose the most unfrequent literal between that wasn't used before.
 
 =head1 LICENSE
 

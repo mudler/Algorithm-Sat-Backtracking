@@ -25,6 +25,20 @@ my $result = cmpthese(
             $expr->and("baz");
             $expr->solve;
         },
+        'SAT::Backtracking::DPLLFreq' => sub {
+            my $expr = Algorithm::SAT::Expression->new->with(
+                "Algorithm::SAT::Backtracking::DPLLFreq");
+            $expr->and( "foo", "bar" );
+            $expr->and("baz");
+            $expr->solve;
+        },
+        'SAT::Backtracking::DPLLUnFreq' => sub {
+            my $expr = Algorithm::SAT::Expression->new->with(
+                "Algorithm::SAT::Backtracking::DPLLUnFreq");
+            $expr->and( "foo", "bar" );
+            $expr->and("baz");
+            $expr->solve;
+        },
         'Algorithm::SAT::Backtracking::Ordered' => sub {
             my $expr = Algorithm::SAT::Expression->new->with(
                 "Algorithm::SAT::Backtracking::Ordered");

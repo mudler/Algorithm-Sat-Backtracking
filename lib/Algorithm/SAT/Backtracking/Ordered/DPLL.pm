@@ -5,7 +5,7 @@ use Algorithm::SAT::Backtracking::DPLL
     "Algorithm::SAT::Backtracking::Ordered";
 use strict;
 use warnings;
-our $VERSION = "0.13";
+our $VERSION = "0.14";
 
 ##Ordered implementation, of course has its costs
 sub solve {

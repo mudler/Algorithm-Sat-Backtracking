@@ -3,7 +3,7 @@ use Storable qw(dclone);
 use Data::Dumper;
 use strict;
 use warnings;
-our $VERSION = "0.13";
+our $VERSION = "0.14";
 
 # this allow to switch the parent implementation (needed for the Ordered alternative)
 sub import {

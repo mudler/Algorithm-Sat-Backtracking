@@ -8,7 +8,7 @@ my $result = cmpthese(
     {   'SAT::Backtracking' => sub {
             my $expr = Algorithm::SAT::Expression->new;
             $expr->xor( "foo", "bar" );
-	    $expr->xor( "foo", "bar", "baz" );
+            $expr->xor( "foo", "bar", "baz" );
             $expr->solve;
         },
         'SAT::Backtracking::DPLL' => sub {
@@ -25,13 +25,27 @@ my $result = cmpthese(
             $expr->xor( "foo", "bar", "baz" );
             $expr->solve;
         },
-            'Algorithm::SAT::Backtracking::Ordered' => sub {
+        'SAT::Backtracking::DPLLFreq' => sub {
+            my $expr = Algorithm::SAT::Expression->new->with(
+                "Algorithm::SAT::Backtracking::DPLLFreq");
+            $expr->xor( "foo", "bar" );
+            $expr->xor( "foo", "bar", "baz" );
+            $expr->solve;
+        },
+        'SAT::Backtracking::DPLLUnFreq' => sub {
+            my $expr = Algorithm::SAT::Expression->new->with(
+                "Algorithm::SAT::Backtracking::DPLLUnFreq");
+            $expr->xor( "foo", "bar" );
+            $expr->xor( "foo", "bar", "baz" );
+            $expr->solve;
+        },
+        'Algorithm::SAT::Backtracking::Ordered' => sub {
             my $expr = Algorithm::SAT::Expression->new->with(
                 "Algorithm::SAT::Backtracking::Ordered");
             $expr->xor( "foo", "bar" );
             $expr->xor( "foo", "bar", "baz" );
             $expr->solve;
-            }
+        }
 
     }
 );

@@ -1,7 +1,5 @@
 package Algorithm::SAT::Backtracking::DPLLFreq;
 use base 'Algorithm::SAT::Backtracking::DPLL';
-use List::Util qw(shuffle);
-use Storable qw(dclone);
 use strict;
 use warnings;
 our $VERSION = "0.14";

@@ -2,6 +2,11 @@ Revision history for Perl extension Algorithm-SAT-Backtracking
 
 {{$NEXT}}
 
+    - Added two new implementations, DPLLFreq and DPLLUnFreq
+    - Added more testing files
+    - Fixed Pure literal rule for DPLL
+    - small fixes 
+
 0.13 2015-02-06T14:02:24Z
 
     - small code enhancements to speed up the computation, POD fixes

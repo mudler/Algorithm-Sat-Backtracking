@@ -57,6 +57,8 @@ Look at L<Algorithm::SAT::Backtracking> for a theory description.
 
 L<Algorithm::SAT::Expression> use this module to solve Boolean expressions.
 
+Note: This implementation is just for academic purposes - it's not reliable and susceptible to plateau
+
 =head1 METHODS
 
 Inherits all the methods from L<Algorithm::SAT::Backtracking::DPLL> and in this variant C<_choice()> it's overrided to choose a random literal.
@@ -70,7 +72,7 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-mudler E<lt>mudler@dark-lab.netE<gt>
+mudler E<lt>mudler@gentoo.orgE<gt>
 
 =head1 SEE ALSO
 

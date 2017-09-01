@@ -258,9 +258,9 @@ Algorithm::SAT::Backtracking::DPLL - A DPLL Backtracking SAT solver written in p
 
 Algorithm::SAT::Backtracking::DPLL is a pure Perl implementation of a SAT Backtracking solver.
 
-Look at L<Algorithm::SAT::Backtracking> for a theory description.
+The DPLL is the basis of modern SAT solvers. Look at L<Algorithm::SAT::Backtracking> for a theory description of the I<SAT> problem.
 
-The DPLL variant applies the "unit propagation" and the "pure literal" technique to be faster.
+The DPLL variant applies the "unit propagation" and the "pure literal" technique to be faster and avoid to test solutions that can't satisfy the expression.
 
 Look also at the tests file for an example of usage.
 
@@ -279,11 +279,10 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-mudler E<lt>mudler@dark-lab.netE<gt>
+mudler E<lt>mudler@gentoo.orgE<gt>
 
 =head1 SEE ALSO
 
 L<Algorithm::SAT::Expression>, L<Algorithm::SAT::Backtracking>, L<Algorithm::SAT::Backtracking::Ordered>, L<Algorithm::SAT::Backtracking::Ordered::DPLL>
 
 =cut
-

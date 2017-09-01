@@ -188,7 +188,7 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-mudler E<lt>mudler@dark-lab.netE<gt>
+mudler E<lt>mudler@gentoo.orgE<gt>
 
 =head1 SEE ALSO
 

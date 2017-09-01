@@ -181,7 +181,9 @@ Algorithm::SAT::Backtracking - A simple Backtracking SAT solver written in pure 
 
 Algorithm::SAT::Backtracking is a pure Perl implementation of a simple SAT Backtracking solver.
 
-In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as I<SATISFIABILITY> or I<SAT>) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula. In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values B<TRUE> or B<FALSE> in such a way that the formula evaluates to B<TRUE>. If this is the case, the formula is called satisfiable. On the other hand, if no such assignment exists, the function expressed by the formula is identically B<FALSE> for all possible variable assignments and the formula is unsatisfiable.
+In computer science, the Boolean Satisfiability Problem (sometimes called Propositional Satisfiability Problem and abbreviated as I<SATISFIABILITY> or I<SAT>) is the problem of determining if there exists an interpretation that satisfies a given Boolean formula.
+In other words, it asks whether the variables of a given Boolean formula can be consistently replaced by the values B<TRUE> or B<FALSE> in such a way that the formula evaluates to B<TRUE>. If this is the case, the formula is called satisfiable.
+On the other hand, if no such assignment exists, the function expressed by the formula is identically B<FALSE> for all possible variable assignments and the formula is unsatisfiable.
 
 For example, the formula "a AND NOT b" is satisfiable because one can find the values a = B<TRUE> and b = B<FALSE>, which make (a AND NOT b) = TRUE. In contrast, "a AND NOT a" is unsatisfiable. More: L<https://en.wikipedia.org/wiki/Boolean_satisfiability_problem> .
 
@@ -193,18 +195,19 @@ L<Algorithm::SAT::Expression> use this module to solve Boolean expressions.
 
 =head2 solve()
 
-The input consists of a boolean expression in Conjunctive Normal Form.
-This means it looks something like this:
+The input consists of a boolean expression in Conjunctive Normal Form (I<CNF>).
 
- `(blue OR green) AND (green OR NOT yellow)`
+This means that the constraints have to be reduced to B<AND> and B<OR>, it looks something like this:
+
+ `(a OR b) AND (b OR NOT c)`
 
  We encode this as an array of strings with a `-` in front for negation:
 
-    `[['blue', 'green'], ['green', '-yellow']]`
+    `[['a', 'b'], ['b', '-c']]`
 
 Hence, each row means an B<AND>, while a list groups two or more B<OR> clauses.
 
-Returns 0 if the expression can't be solved with the given clauses, the model otherwise in form of a hash .
+Returns 0 if the expression can't be solved with the given clauses or otherwise the model in form of a hash .
 
 Have a look at L<Algorithm::SAT::Expression> to see how to use it in a less painful way.
 
@@ -213,8 +216,8 @@ Have a look at L<Algorithm::SAT::Expression> to see how to use it in a less pain
 Uses the model to resolve some variable to its actual value, or undefined if not present.
 
     my $model = { blue => 1, red => 0 };
-    my $a=$solver->resolve( "blue", $model );
-    #$a = 1
+    my $a = $solver->resolve( "blue", $model );
+    # $a is 1
 
 =head2 satisfiable()
 
@@ -222,8 +225,8 @@ Determines whether a clause is satisfiable given a certain model.
 
     my $model
         = { pink => 1, purple => 0, green => 0, yellow => 1, red => 0 };
-    my $a=$solver->satisfiable( [ 'purple', '-pink' ], $model );
-    #$a = 0
+    my $a = $solver->satisfiable( [ 'purple', '-pink' ], $model );
+    # $a is 0
 
 =head2 update()
 
@@ -243,11 +246,10 @@ it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-mudler E<lt>mudler@dark-lab.netE<gt>
+mudler E<lt>mudler@gentoo.orgE<gt>
 
 =head1 SEE ALSO
 
 L<Algorithm::SAT::Expression>, L<Algorithm::SAT::Backtracking::DPLL>, L<Algorithm::SAT::Backtracking::Ordered>, L<Algorithm::SAT::Backtracking::Ordered::DPLL>
 
 =cut
-

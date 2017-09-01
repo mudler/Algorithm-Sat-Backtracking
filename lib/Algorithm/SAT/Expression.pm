@@ -14,8 +14,8 @@ sub new {
         _literals       => {},
         _expr           => [],
         _implementation => "Algorithm::SAT::Backtracking"
-        },
-        shift;
+      },
+      shift;
 }
 
 sub with {
@@ -50,11 +50,12 @@ sub xor {
     $self->_ensure(@literals);
 
     # Then, we generate clauses such that "only one of them is true".
-    for ( my $i = 0; $i <= $#literals; $i++ ) {
-        for ( my $j = $i + 1; $j <= $#literals; $j++ ) {
+    for ( my $i = 0 ; $i <= $#literals ; $i++ ) {
+        for ( my $j = $i + 1 ; $j <= $#literals ; $j++ ) {
             push(
                 @{ $self->{_expr} },
-                [   $self->negate_literal( $literals[$i] ),
+                [
+                    $self->negate_literal( $literals[$i] ),
                     $self->negate_literal( $literals[$j] )
                 ]
             );
@@ -76,7 +77,7 @@ sub and {
 # Solve this expression with the backtrack solver. Lazy-loads the solver.
 sub solve {
     return $_[0]->{_implementation}
-        ->new->solve( $_[0]->{_variables}, $_[0]->{_expr} );
+      ->new->solve( $_[0]->{_variables}, $_[0]->{_expr} );
 }
 
 # ### _ensure
@@ -87,18 +88,20 @@ sub _ensure {
     do {
         $self->{_literals}->{$_} = 1;
         push( @{ $self->{_variables} }, $_ );
-        }
-        for grep { !$self->{_literals}->{$_} }
-        map { substr( $_, 0, 1 ) eq "-" ? substr( $_, 1 ) : $_ } @_;
+      }
+      for grep { !$self->{_literals}->{$_} }
+      map { substr( $_, 0, 1 ) eq "-" ? substr( $_, 1 ) : $_ } @_;
 }
 
 sub negate_literal {
     my ( undef, $var ) = @_;
 
     return ( substr( $var, 0, 1 ) eq "-" )
-        ? substr( $var, 1 )
-        : '-' . $var;
+      ? substr( $var, 1 )
+      : '-' . $var;
 }
+
+*not = \&negate_literal;
 
 1;
 __END__
@@ -185,4 +188,3 @@ mudler E<lt>mudler@dark-lab.netE<gt>
 L<Algorithm::SAT::Backtracking>, L<Algorithm::SAT::Backtracking::DPLL>, L<Algorithm::SAT::Backtracking::Ordered>, L<Algorithm::SAT::Backtracking::Ordered::DPLL>
 
 =cut
-

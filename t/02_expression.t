@@ -76,11 +76,18 @@ subtest "xor()" => sub {
     }
 };
 
+subtest "not()" => sub {
+    my $expr = Algorithm::SAT::Expression->new;
+    is $expr->not('a'),  "-a", "Not a is -a";
+    is $expr->not('-a'), "a",  "Not -a is a";
+};
+
 subtest "solve()" => sub {
     for my $impl (
         @algs,
-      #  "Algorithm::SAT::Backtracking::Ordered",
-      #  "Algorithm::SAT::Backtracking::Ordered::DPLL"
+
+        #  "Algorithm::SAT::Backtracking::Ordered",
+        #  "Algorithm::SAT::Backtracking::Ordered::DPLL"
       )
     {
         my $exp       = Algorithm::SAT::Expression->new;

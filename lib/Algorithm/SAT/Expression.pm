@@ -156,6 +156,13 @@ Takes the inputs and build an B<OR> expression for it
 
 Takes the inputs and build an B<XOR> expression for it
 
+=head2 not()
+
+Takes a literal as input and returns the logical negation of it.
+
+    $exp->not('a'); # -a
+    $exp->not('-a'); # a
+
 =head2 solve()
 
 Uses L<Algorithm::SAT::Backtracking> to return a model that satisfies the expression.

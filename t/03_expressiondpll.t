@@ -14,8 +14,8 @@ eval "use $_" for @alg;
 subtest "_pure()/_pure_unit()" => sub {
     for my $impl (
         @alg,
-        "Algorithm::SAT::Backtracking::Ordered",
-        "Algorithm::SAT::Backtracking::Ordered::DPLL"
+	#"Algorithm::SAT::Backtracking::Ordered",
+	#"Algorithm::SAT::Backtracking::Ordered::DPLL"
       )
     {
         my $agent = $impl->new;
